@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MODEL-FUNCTOR AUDIT — station 12</title>
+<style>
+:root{--org:#ff6a00;--bg:#0d0b09;--panel:#161210;--ink:#e8e0d8;--dim:#8a7f74;--lit:#39d353;--amber:#ffb020;--fail:#ff3b30;--line:#2a221c;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;padding:18px;max-width:1020px;margin:0 auto;}
+a{color:var(--org);}
+.back{font-size:11px;letter-spacing:1px;color:var(--dim);text-decoration:none;display:inline-block;margin-bottom:10px;}
+.back:hover{color:var(--org);}
+header{border:3px solid var(--org);padding:14px 18px;margin-bottom:14px;}
+h1{font-size:23px;letter-spacing:2px;color:var(--org);text-transform:uppercase;}
+h1 small{color:var(--dim);font-size:12px;display:block;margin-top:4px;text-transform:none;line-height:1.5;}
+section{background:var(--panel);border:1px solid var(--line);margin-bottom:14px;padding:14px 16px;}
+h2{font-size:13px;color:var(--org);text-transform:uppercase;letter-spacing:2px;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:10px;}
+p{font-size:13px;line-height:1.55;margin-bottom:8px;}
+button{background:var(--org);color:#000;border:none;padding:12px 22px;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:1px;}
+button:disabled{background:#5a3a1a;color:#999;cursor:wait;}
+input[type=password]{background:#0a0806;border:1px solid var(--line);color:var(--ink);font-family:ui-monospace,monospace;font-size:12px;padding:9px 10px;width:340px;max-width:100%;}
+label.k{display:block;font-size:11px;color:var(--dim);letter-spacing:1px;margin-bottom:5px;text-transform:uppercase;}
+pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-x:auto;}
+.tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;padding:2px 7px;margin-right:6px;border:1px solid;}
+.tag.lit{color:var(--lit);border-color:var(--lit);}
+.tag.amber{color:var(--amber);border-color:var(--amber);}
+.tag.wall{color:var(--fail);border-color:var(--fail);}
+.diag{border:2px solid var(--fail);background:#1a0806;padding:10px;font-family:ui-monospace,monospace;font-size:12px;color:var(--fail);display:none;white-space:pre-wrap;margin:8px 0;}
+.prog{color:var(--amber);font-size:12px;font-family:ui-monospace,monospace;}
+.toddler{border-left:4px solid var(--amber);padding:10px 12px;background:#1a1508;font-size:13px;}
+.seal{font-family:ui-monospace,monospace;font-size:11px;color:var(--lit);word-break:break-all;}
+.seal.bad{color:var(--fail);}
+.note{font-size:11.5px;color:var(--dim);line-height:1.55;}
+</style></head>
+<body>
+<a class="back" href="https://davidwise01.github.io/ud0/">◄ UD0 · A SCANNER DARKLY</a>
+<header><h1>MODEL-FUNCTOR AUDIT<small>is a model a functor, and are two models naturally equivalent? · subjects: <b>claude-sonnet-4-6</b> vs <b>claude-haiku-4-5</b> (both real, active model IDs) · bench station 12 · <b>witness: bring-your-own-key</b> — the live audit is DORMANT until you paste your own Anthropic key; the docket + its hash below need no key</small></h1></header>
+<div class="diag" id="diag"></div>
+
+<section><h2>Protocol</h2>
+<p><b>Skeleton S:</b> seed texts are objects; arrows are operations f = "summarize in one sentence", g = "list the three most important entities", and the composite gf as a single combined instruction. <b>Functoriality (per model):</b> does M(g, M(f, x)) match M(gf, x)? A model that respects composition acts like a functor; where it breaks, chained calls and combined instructions are NOT interchangeable — an operational fact worth knowing. <b>Naturality (between models):</b> output similarity at each node, tracked along arrows — if agreement decays as you travel, that decay is the measured deviation field between the models. Similarity = cosine over term frequencies; threshold shown with every verdict, never hidden.</p>
+<p><span class="tag amber">AMBER</span>Similarity is a lexical proxy for semantic equality; thresholds are reported, not divinely chosen; 2 seeds × 2 models × 3 calls = 12 calls, n is small — re-run for variance.</p>
+<p><span class="tag wall">WALL</span>This bench calls a live LLM. On a static page there is no server and no hidden key, so it makes REAL, BILLABLE requests straight from your browser to <code>api.anthropic.com</code> using a key <i>you</i> paste below — the key stays in this tab, is sent only to Anthropic's own endpoint (with <code>anthropic-dangerous-direct-browser-access</code>), and is never stored or forwarded anywhere else. No key pasted ⇒ nothing runs; I do not ship pre-baked "sample outputs" dressed up as a live run.</p>
+<label class="k" for="key">your anthropic api key (stays in this browser tab)</label>
+<input type="password" id="key" placeholder="sk-ant-…  (leave blank to keep the bench dormant)" autocomplete="off" spellcheck="false">
+<p style="margin-top:12px;"><button id="run">RUN THE AUDIT</button> <span class="prog" id="prog"></span></p></section>
+
+<section><h2>Functoriality — does each model respect composition?</h2><pre id="funct">awaiting a key + run…</pre></section>
+<section><h2>Naturality — do the two models stay equivalent along arrows?</h2><pre id="nat">awaiting a key + run…</pre></section>
+
+<section><h2>Registered-prediction docket v2 (v1 was rejected at its own gate)</h2>
+<pre id="docket"></pre>
+<p class="note">SHA-256 of the docket's <b>canonical compact serialization</b> — <code>JSON.stringify(DOCKET)</code> with no whitespace, which is byte-for-byte the file <code>docket_v2_compact.json</code>. (The box above is pretty-printed for reading; hash the compact form, not the indented text.) The page recomputes it live in your browser and checks it against the value baked at publish time — a mismatch turns the line red.</p>
+<p class="seal" id="sealhash">computing…</p></section>
+
+<section><h2>A lens into the mediator — box 8</h2>
+<p class="note">The core of this audit is a <b>commuting square</b>: x →f→ (summary) →g→ (entities), versus x →gf→ (entities) direct. The intermediate object — <i>the summary</i> — is a <b>mediator</b>. Where the square commutes, the mediator is skippable (you could have gone direct); where it forks, the mediator is load-bearing and the fork says exactly where. That same structure — a mediating object that is empty when the square commutes and occupied when it forks — is the eighth box of the folded kernel. AVAN's inverse-companion reads it there, on an exactly-solvable quantum ladder, offline: <a href="https://davidwise01.github.io/the-mediator/">媒 BAI · THE MEDIATOR →</a></p></section>
+
+<section><h2>Toddler corner</h2><div class="toddler">
+A machine is trustworthy the way a good recipe is: doing step one then step two should make the same cake as reading both steps at once. We test two robot cooks that way. Then we ask a second question: if both cooks bake alike from the same batter, do they STILL bake alike after the batter has been through a step? If their cakes drift apart step by step, we do not say the cooks are different — we say exactly at which step the kitchen forked.
+</div></section>
+
+<footer style="font-size:11px;color:var(--dim);padding:8px 2px;line-height:1.6;">MODEL-FUNCTOR-AUDIT-v2 · squares over similarity with reported thresholds · docket hash for external anchoring · a gate that never rejects is decoration<br>David Lee Wise (Bridge-Burners LLC / Fiddler) with Claude · homed in A SCANNER DARKLY · inverse-companion: 媒 BAI · THE MEDIATOR (HEÚREMA).</footer>
+
+<script>
+const DOCKET = {"id":"TRIPWIRE-DOCKET-v2","registered":"2026-07-17, TRIPWIRE bench session, Fiddler x Claude Fable 5","supersedes":{"v1_sha256":"f996127dc24b0ffaaf0e8fa23a1e26de9c0efc8a00fb2cc6c6eaab67f1efd9fe","reason":"v1 rejected at the gate: P2 already substantially true at sealing; P1/P3 lacked adjudication criteria"},"prior_art_as_of_sealing":["LLM stylometric attribution / fingerprinting is an ESTABLISHED field: neural authorship attribution framed 2023 (arXiv 2308.07305); AISec'25 code stylometry 95.4% multi-class attribution; survey-level topic coverage; open-source audit chains combining behavioral probing + stylistic signatures + representation similarity","Categorical/compositional ML exists as a literature; functor-based MODEL-EQUIVALENCE AUDITING with commuting-square localization not found as a named method in audit/regulatory context as of sealing","Sentence-initial doorway census as a distinct named feature class not found in attribution literature as of sealing"],"predictions":[{"id":"P1","claim":"A paper or regulatory/technical-standards document uses functor / natural transformation / commuting-square structure as LOAD-BEARING method (not metaphor) for comparing or certifying equivalence of AI models","by":"2029-07-17","adjudication":"Search arXiv + ACM DL + NIST/ISO/EU-AI-Act technical docs for (functor OR 'natural transformation' OR 'commuting square') AND (model equivalence OR model comparison OR audit OR conformance). Load-bearing = the construction appears in the method section and results depend on it. Any single qualifying document resolves TRUE."},{"id":"P2","claim":"Sentence-initial word distribution ('doorway census') appears as a NAMED, distinct feature class (not merely function-word frequency in aggregate) in at least one peer-reviewed or arXiv model-attribution / model-forensics paper","by":"2028-07-17","adjudication":"Feature must be sentence-position-specific and named/tabulated separately from bag-of-words stylometry. Any single qualifying paper resolves TRUE."},{"id":"P3","claim":"A stance-installation test at scale (model >= 1B params, controlled corpus-stance manipulation, unconditional-prior readout) finds a real effect that is SUB-UNANIMOUS and register-dependent (i.e., the 300/300 toy unanimity does not survive scale)","by":"2027-07-17","adjudication":"If no qualifying experiment is published by the date: resolves UNTESTED (neither win nor loss, excluded from track record). If published: TRUE iff effect present AND unanimity < 100% AND register moderation reported; FALSE if effect absent or unanimity persists."}],"forecaster_track_record":"1-for-5 on this session's docket; v1 payload rejected by its own gate before sealing; weight accordingly"};
+const EXPECT_HASH = "d876eafaacf924c498fb029405ddeaabe5358a7e138b2a7310a9abf982fc35d8"; // sha256 of JSON.stringify(DOCKET) == docket_v2_compact.json bytes
+const MODELS = ["claude-sonnet-4-6","claude-haiku-4-5-20251001"];
+const SEEDS = [
+ {id:"factual", text:"The Amazon River discharges about 209,000 cubic meters of water per second into the Atlantic Ocean, more than the next seven largest rivers combined. Its basin covers roughly 40 percent of South America and hosts an estimated 400 billion individual trees."},
+ {id:"narrative", text:"Mara found the lighthouse door unlocked, which it never was. Inside, the lamp room smelled of salt and machine oil, and on the keeper's desk lay a logbook open to a date three weeks in the future, written in her own handwriting."}
+];
+const OPS = {
+ f: "Summarize the following text in exactly one sentence. Output only the sentence.\n\n",
+ g: "List the three most important entities in the following text as a comma-separated list. Output only the list.\n\n",
+ gf:"Summarize the following text in exactly one sentence, then from YOUR summary list the three most important entities as a comma-separated list. Output only the list.\n\n"
+};
+const THRESH = 0.5;
+
+function fail(m,e){const d=document.getElementById('diag');d.style.display='block';d.textContent="FAIL-LOUD\n"+m+"\n"+(e&&e.stack?e.stack:String(e||''));}
+async function ask(key, model, prompt){
+ const r = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{
+   "Content-Type":"application/json",
+   "x-api-key":key,
+   "anthropic-version":"2023-06-01",
+   "anthropic-dangerous-direct-browser-access":"true"
+  },
+  body:JSON.stringify({model:model,max_tokens:300,messages:[{role:"user",content:prompt}]})});
+ const data = await r.json();
+ if(data.error) throw new Error(model+": "+JSON.stringify(data.error));
+ return data.content.filter(b=>b.type==="text").map(b=>b.text).join(" ").trim();
+}
+function tf(s){const w=(s.toLowerCase().match(/[a-z0-9']+/g)||[]);const m={};w.forEach(x=>m[x]=(m[x]||0)+1);return m;}
+function cos(a,b){const A=tf(a),B=tf(b);let d=0,na=0,nb=0;
+ for(const k in A){na+=A[k]*A[k]; if(B[k]) d+=A[k]*B[k];}
+ for(const k in B){nb+=B[k]*B[k];}
+ return (na&&nb)? d/Math.sqrt(na*nb) : 0;}
+function bar(v){return "#".repeat(Math.round(v*30)).padEnd(30," ");}
+
+document.getElementById('docket').textContent = JSON.stringify(DOCKET,null,1);
+(async()=>{try{
+ const buf = new TextEncoder().encode(JSON.stringify(DOCKET));
+ const h = await crypto.subtle.digest("SHA-256", buf);
+ const hex = Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,"0")).join("");
+ const el = document.getElementById('sealhash');
+ if(hex===EXPECT_HASH){ el.textContent = hex + "   ✓ matches docket_v2_compact.json"; }
+ else { el.className="seal bad"; el.textContent = hex + "   ✗ DOES NOT MATCH baked hash "+EXPECT_HASH+" — docket text was altered."; }
+}catch(e){document.getElementById('sealhash').textContent="hash unavailable: "+e;}})();
+
+document.getElementById('run').onclick = async ()=>{
+ const key = document.getElementById('key').value.trim();
+ const prog=document.getElementById('prog');
+ if(!key){ prog.textContent="dormant — paste your Anthropic key above to run the live audit (real billable calls)."; return; }
+ const btn=document.getElementById('run'); btn.disabled=true;
+ document.getElementById('diag').style.display='none';
+ try{
+  const out={};
+  let step=0, total=MODELS.length*SEEDS.length*3;
+  for(const m of MODELS){ out[m]={};
+   for(const s of SEEDS){
+    prog.textContent = `calls ${step+1}-${step+3}/${total} [${m.split("-")[1]} · ${s.id}] …`;
+    const fx  = await ask(key, m, OPS.f + s.text);            step++;
+    const gfx = await ask(key, m, OPS.g + fx);                step++;
+    const gfc = await ask(key, m, OPS.gf + s.text);           step++;
+    out[m][s.id] = {fx, gfx, gfc, functSim: cos(gfx,gfc)};
+   }
+  }
+  let F = "FUNCTORIALITY: sim( M(g, M(f,x)) , M(gf, x) )   threshold "+THRESH+"\n\n";
+  for(const m of MODELS){ F += m+"\n";
+   for(const s of SEEDS){
+    const v = out[m][s.id].functSim;
+    F += `  ${s.id.padEnd(10)} ${bar(v)} ${v.toFixed(3)}  ${v>=THRESH?"COMMUTES":"BREAKS"}\n`;
+   } F += "\n";
+  }
+  document.getElementById('funct').textContent = F;
+  let Nt = "NATURALITY: cross-model similarity at each node (decay along arrows = measured deviation)\n\n";
+  for(const s of SEEDS){
+   const a=out[MODELS[0]][s.id], b=out[MODELS[1]][s.id];
+   const nodes=[["seed x (identical)",1.0],["after f",cos(a.fx,b.fx)],["after g.f (chained)",cos(a.gfx,b.gfx)],["after gf (combined)",cos(a.gfc,b.gfc)]];
+   Nt += s.id+"\n";
+   nodes.forEach(([n,v])=>{Nt += `  ${n.padEnd(22)} ${bar(v)} ${v.toFixed(3)}\n`;});
+   const drift=(nodes[1][1]-nodes[2][1]);
+   Nt += `  arrow-drift f -> g.f: ${drift>=0?"+":""}${(-drift).toFixed(3)} agreement change  ${Math.abs(drift)<0.15?"(stable)":"(FORK — kitchen diverges at g)"}\n\n`;
+  }
+  Nt += "verdict rule: models are naturally equivalent on this skeleton iff every node ≥ "+THRESH+" and no fork flags.";
+  document.getElementById('nat').textContent = Nt;
+  prog.textContent = "done ("+total+" calls). re-run for variance.";
+ }catch(e){fail("audit failed mid-run", e); prog.textContent="failed — see the red box (bad key, CORS block, or rate limit).";}
+ btn.disabled=false;
+};
+</script>
+</body></html>
