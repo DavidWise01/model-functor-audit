@@ -33,7 +33,7 @@ pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height
 </style></head>
 <body>
 <a class="back" href="https://davidwise01.github.io/ud0/">◄ UD0 · A SCANNER DARKLY</a>
-<header><h1>MODEL-FUNCTOR AUDIT<small>is a model a functor, and are two models naturally equivalent? · subjects: <b>claude-sonnet-4-6</b> vs <b>claude-haiku-4-5</b> (both real, active model IDs) · bench station 12 · <b>witness: bring-your-own-key</b> — the live audit is DORMANT until you paste your own Anthropic key; the docket + its hash below need no key</small></h1></header>
+<header><h1>MODEL-FUNCTOR AUDIT<small>is a model a functor, and are two models naturally equivalent? · subjects: <b>claude-sonnet-5</b> vs <b>claude-haiku-4-5</b> · bench station 12 · a <b>recorded run is baked below</b> (2026-07-18); the LIVE re-run is bring-your-own-key. (Originally specced for sonnet-4-6; run here on the current Sonnet 5.)</small></h1></header>
 <div class="diag" id="diag"></div>
 
 <section><h2>Protocol</h2>
@@ -46,6 +46,60 @@ pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height
 
 <section><h2>Functoriality — does each model respect composition?</h2><pre id="funct">awaiting a key + run…</pre></section>
 <section><h2>Naturality — do the two models stay equivalent along arrows?</h2><pre id="nat">awaiting a key + run…</pre></section>
+
+<section><h2>Recorded run — 2026-07-18</h2>
+<p><span class="tag lit">RAN</span>The 12-call protocol was executed on real models and scored with this page's own tf/cosine metric (threshold 0.50), so the bench is not dormant on arrival. <b>Functoriality is not universal</b> — one cell BREAKS (chained g·f ≠ combined gf: the summary is load-bearing there), three COMMUTE; and the two models stay naturally equivalent (no fork on either seed).</p>
+<p><span class="tag amber">AMBER</span>Models: <b>Claude Sonnet 5</b> · <b>Claude Haiku 4.5</b>, generated through Claude Code's agent harness — <i>not</i> a bare <code>messages.create</code>. Your own keyed <b>RUN</b> above (same models, same prompts) will produce its own wording, so this is a representative transcript, reproducible in kind, not verbatim. The 0.492 BREAK sits right on the 0.50 line — a hair flips it, which is exactly why the threshold stays amber; the metric is still a lexical cosine and n = 1 per cell.</p>
+<pre>FUNCTORIALITY   sim( M(g, M(f,x)) , M(gf, x) )   threshold 0.50
+
+claude-sonnet-5
+  factual     ###############                 0.492  BREAKS
+  narrative   ###################             0.630  COMMUTES
+
+claude-haiku-4-5
+  factual     ######################          0.730  COMMUTES
+  narrative   ##############################  1.000  COMMUTES</pre>
+<pre>NATURALITY   cross-model similarity at each node · Sonnet 5 vs Haiku 4.5
+
+factual
+  seed x (identical)     ##############################  1.000
+  after f                ######################          0.731
+  after g·f (chained)    ########################        0.800
+  after gf (combined)    ##################              0.599
+  drift f→g·f  −0.069 (agreement rises along g)   |Δ| < 0.15 → no fork
+
+narrative
+  seed x (identical)     ##############################  1.000
+  after f                #################               0.567
+  after g·f (chained)    ####################            0.655
+  after gf (combined)    #################               0.577
+  drift f→g·f  −0.088 (agreement rises along g)   |Δ| < 0.15 → no fork
+
+verdict: naturally equivalent on this skeleton — every node ≥ 0.50, no fork.</pre>
+<details><summary style="cursor:pointer;color:var(--org);font-size:12px;letter-spacing:1px;">▸ the 12 raw outputs (inspect / re-score them yourself)</summary>
+<pre>── claude-sonnet-5 · factual ──
+f   (summarize)     The Amazon River discharges roughly 209,000 cubic meters of water per second—more than the next seven largest rivers combined—drains about 40 percent of South America, and supports an estimated 400 billion trees.
+g·f (chained)       Amazon River, South America, trees
+gf  (combined)      The Amazon River, which flows into the Atlantic Ocean at a rate exceeding the combined discharge of the next seven largest rivers, drains about 40 percent of South America and supports roughly 400 billion trees.
+                    Amazon River, Atlantic Ocean, South America
+   → chained kept "trees", combined kept "Atlantic Ocean": the route through the summary changed the answer. sim 0.492, BREAKS.
+
+── claude-sonnet-5 · narrative ──
+f   (summarize)     Mara discovers her lighthouse's unlocked door leads to a logbook already inscribed, in her own hand, with an entry dated three weeks ahead.
+g·f (chained)       Mara, the lighthouse, the logbook
+gf  (combined)      Mara discovered the lighthouse unlocked and found a logbook on the keeper's desk open to a future date, written in her own hand.
+                    Mara, lighthouse, logbook   → sim 0.630, COMMUTES.
+
+── claude-haiku-4-5 · factual ──
+f   (summarize)     The Amazon River discharges more water than the next seven largest rivers combined while its basin spans 40 percent of South America and contains approximately 400 billion trees.
+g·f (chained)       Amazon River, South America, basin
+gf  (combined)      Amazon River, Atlantic Ocean, South America   → sim 0.730, COMMUTES.
+
+── claude-haiku-4-5 · narrative ──
+f   (summarize)     Mara discovers a logbook in an unlocked lighthouse containing entries written in her own handwriting and dated three weeks in the future.
+g·f (chained)       Mara, logbook, lighthouse
+gf  (combined)      Mara, lighthouse, logbook   → sim 1.000, COMMUTES.</pre></details>
+</section>
 
 <section><h2>Registered-prediction docket v2 (v1 was rejected at its own gate)</h2>
 <pre id="docket"></pre>
@@ -64,7 +118,7 @@ A machine is trustworthy the way a good recipe is: doing step one then step two 
 <script>
 const DOCKET = {"id":"TRIPWIRE-DOCKET-v2","registered":"2026-07-17, TRIPWIRE bench session, Fiddler x Claude Fable 5","supersedes":{"v1_sha256":"f996127dc24b0ffaaf0e8fa23a1e26de9c0efc8a00fb2cc6c6eaab67f1efd9fe","reason":"v1 rejected at the gate: P2 already substantially true at sealing; P1/P3 lacked adjudication criteria"},"prior_art_as_of_sealing":["LLM stylometric attribution / fingerprinting is an ESTABLISHED field: neural authorship attribution framed 2023 (arXiv 2308.07305); AISec'25 code stylometry 95.4% multi-class attribution; survey-level topic coverage; open-source audit chains combining behavioral probing + stylistic signatures + representation similarity","Categorical/compositional ML exists as a literature; functor-based MODEL-EQUIVALENCE AUDITING with commuting-square localization not found as a named method in audit/regulatory context as of sealing","Sentence-initial doorway census as a distinct named feature class not found in attribution literature as of sealing"],"predictions":[{"id":"P1","claim":"A paper or regulatory/technical-standards document uses functor / natural transformation / commuting-square structure as LOAD-BEARING method (not metaphor) for comparing or certifying equivalence of AI models","by":"2029-07-17","adjudication":"Search arXiv + ACM DL + NIST/ISO/EU-AI-Act technical docs for (functor OR 'natural transformation' OR 'commuting square') AND (model equivalence OR model comparison OR audit OR conformance). Load-bearing = the construction appears in the method section and results depend on it. Any single qualifying document resolves TRUE."},{"id":"P2","claim":"Sentence-initial word distribution ('doorway census') appears as a NAMED, distinct feature class (not merely function-word frequency in aggregate) in at least one peer-reviewed or arXiv model-attribution / model-forensics paper","by":"2028-07-17","adjudication":"Feature must be sentence-position-specific and named/tabulated separately from bag-of-words stylometry. Any single qualifying paper resolves TRUE."},{"id":"P3","claim":"A stance-installation test at scale (model >= 1B params, controlled corpus-stance manipulation, unconditional-prior readout) finds a real effect that is SUB-UNANIMOUS and register-dependent (i.e., the 300/300 toy unanimity does not survive scale)","by":"2027-07-17","adjudication":"If no qualifying experiment is published by the date: resolves UNTESTED (neither win nor loss, excluded from track record). If published: TRUE iff effect present AND unanimity < 100% AND register moderation reported; FALSE if effect absent or unanimity persists."}],"forecaster_track_record":"1-for-5 on this session's docket; v1 payload rejected by its own gate before sealing; weight accordingly"};
 const EXPECT_HASH = "d876eafaacf924c498fb029405ddeaabe5358a7e138b2a7310a9abf982fc35d8"; // sha256 of JSON.stringify(DOCKET) == docket_v2_compact.json bytes
-const MODELS = ["claude-sonnet-4-6","claude-haiku-4-5-20251001"];
+const MODELS = ["claude-sonnet-5","claude-haiku-4-5-20251001"];
 const SEEDS = [
  {id:"factual", text:"The Amazon River discharges about 209,000 cubic meters of water per second into the Atlantic Ocean, more than the next seven largest rivers combined. Its basin covers roughly 40 percent of South America and hosts an estimated 400 billion individual trees."},
  {id:"narrative", text:"Mara found the lighthouse door unlocked, which it never was. Inside, the lamp room smelled of salt and machine oil, and on the keeper's desk lay a logbook open to a date three weeks in the future, written in her own handwriting."}
